@@ -17,6 +17,9 @@
           libfds = self.packages.libfds;
           nemea-framework = self.packages.nemea-framework;
         };
+        nemea-modules = pkgs.callPackage ./pkgs/nemea-modules/default.nix {
+          nemea-framework = self.packages.nemea-framework;
+        };
       };
 
       overlays = {
