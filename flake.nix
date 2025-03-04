@@ -27,8 +27,8 @@
         };
       };
 
-      overlays = [
-        (final: prev: {
+      overlays = {
+        default = final: prev: {
           libfds = final.callPackage ./pkgs/libfds/default.nix { };
           ipfixcol2 = final.callPackage ./pkgs/ipfixcol2/default.nix {
             libfds = self.packages.libfds;
@@ -43,9 +43,8 @@
             ipfixcol2 = self.packages.ipfixcol2;
             ipfixcol2-unirec-plugin = self.packages.ipfixcol2-unirec-plugin;
           };
-        })
-      ];
-
+        };
+      };
 
       nixosModules = {
         ipfixcol2 = import ./modules/ipfixcol2.nix;
