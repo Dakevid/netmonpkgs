@@ -8,7 +8,8 @@
   libxml2,
   rdkafka,
   zlib,
-  lz4
+  lz4,
+  nemea-framework ? null
 }:
 
 stdenv.mkDerivation rec {
@@ -23,7 +24,17 @@ stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = [ cmake ];
-  buildInputs = [ libfds docutils libxml2 rdkafka zlib lz4 ];
+  buildInputs = [ libfds docutils libxml2 rdkafka zlib lz4 ]
+    ++ (if nemea-framework != null then [ nemea-framework ] else []);
+
+  postInstall = if nemea-framework != null then ''
+    cd ../extra_plugins/output/unirec
+    mkdir build
+    cd build
+    cmake .. -DCMAKE_INSTALL_PREFIX=$out -DCMAKE_C_FLAGS="$CFLAGS -Wno-error=implicit-function-declaration" -DCMAKE_INSTALL_LIBDIR=lib
+    make
+    make install
+  '' else "";
 
   meta = {
     description = "Flexible, high-performance NetFlow v5/v9 and IPFIX flow data collector designed to be extensible by plugins";

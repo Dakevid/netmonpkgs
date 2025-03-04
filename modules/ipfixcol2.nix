@@ -10,13 +10,13 @@ with lib;
   };
 
   config = mkIf config.services.ipfixcol2.enable {
-    environment.etc."ipfixcol2/manor-ipfixcol2-config.xml".source = config.services.ipfixcol2.configXml;
+    environment.etc."ipfixcol2/ipfixcol2-config.xml".source = config.services.ipfixcol2.configXml;
     systemd.services.ipfixcol2 = {
       description = "ipfixcol2 service";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
-        ExecStart = "${pkgs.ipfixcol2-unirec}/bin/ipfixcol2 -p ${pkgs.ipfixcol2-unirec}/lib/ipfixcol2 -c /etc/ipfixcol2/manor-ipfixcol2-config.xml";
+        ExecStart = "${pkgs.ipfixcol2}/bin/ipfixcol2 -c /etc/ipfixcol2/ipfixcol2-config.xml";
         Restart = "always";
       };
     };
