@@ -7,6 +7,11 @@ with lib;
       type = types.path;
       description = "Path to the immutable XML configuration file for ipfixcol2";
     };
+    verbosity = mkOption {
+      type = types.str;
+      default = "";
+      description = "Verbosity level of ipfixcol2 (-v, -vv, -vvv)";
+    };
   };
 
   config = mkIf config.services.ipfixcol2.enable {
@@ -16,7 +21,7 @@ with lib;
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
-        ExecStart = "${pkgs.ipfixcol2}/bin/ipfixcol2 -c /etc/ipfixcol2/ipfixcol2-config.xml";
+        ExecStart = "${pkgs.ipfixcol2}/bin/ipfixcol2 -c /etc/ipfixcol2/ipfixcol2-config.xml ${config.services.ipfixcol2.verbosity}";
         Restart = "always";
       };
     };
