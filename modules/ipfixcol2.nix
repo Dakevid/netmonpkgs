@@ -15,7 +15,7 @@ with lib;
   };
 
   config = mkIf config.services.ipfixcol2.enable {
-    environment.etc.${config.services.ipfixcol2.configXml}.source = config.services.ipfixcol2.configXml;
+    environment.etc."${config.services.ipfixcol2.configXml}".source = config.services.ipfixcol2.configXml;
     systemd.services.ipfixcol2 = {
       description = "ipfixcol2 service";
       after = [ "network.target" ];
