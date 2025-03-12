@@ -5,7 +5,8 @@ let
 in {
   options.services.general-nemea-module = {
     enable = mkEnableOption "Enable nemea module service";
-    package = mkPackageOption {
+    package = mkOption {
+      type = types.package;
       default = pkgs.nemea-modules;
       description = "Nemea module package";
     };
