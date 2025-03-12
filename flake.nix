@@ -30,6 +30,9 @@
             libfds = self.packages.libfds;
             nemea-framework = self.packages.nemea-framework;
           };
+          nemea-modules = final.callPackage ./pkgs/nemea-modules/default.nix {
+            nemea-framework = self.packages.nemea-framework;
+          };
         };
       };
 
