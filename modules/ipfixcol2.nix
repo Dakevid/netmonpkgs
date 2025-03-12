@@ -20,6 +20,7 @@ with lib;
       description = "ipfixcol2 service";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
+      restartIfChanged = [ "/etc/ipfixcol2/config.xml" ];
       serviceConfig = {
         ExecStart = "${pkgs.ipfixcol2}/bin/ipfixcol2 -c /etc/ipfixcol2/config.xml ${config.services.ipfixcol2.verbosity}";
         Restart = "always";
