@@ -35,6 +35,7 @@
 
       nixosModules = {
         ipfixcol2 = import ./modules/ipfixcol2.nix;
+        general-nemea-module = import ./modules/general-nemea-module.nix;
       };
     };
 }
