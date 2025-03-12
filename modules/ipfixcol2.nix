@@ -15,7 +15,7 @@ with lib;
   };
 
   config = mkIf config.services.ipfixcol2.enable {
-    environment.etc."ipfixcol2/${lib.basename config.services.ipfixcol2.configXml}" = {
+    environment.etc."ipfixcol2/${builtins.baseNameOf config.services.ipfixcol2.configXml}" = {
       source = config.services.ipfixcol2.configXml;
     };
     systemd.services.ipfixcol2 = {
@@ -23,7 +23,7 @@ with lib;
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
-        ExecStart = "${pkgs.ipfixcol2}/bin/ipfixcol2 -c /etc/ipfixcol2/${lib.basename config.services.ipfixcol2.configXml} ${config.services.ipfixcol2.verbosity}";
+        ExecStart = "${pkgs.ipfixcol2}/bin/ipfixcol2 -c /etc/ipfixcol2/${builtins.baseNameOf config.services.ipfixcol2.configXml} ${config.services.ipfixcol2.verbosity}";
         Restart = "always";
       };
     };
