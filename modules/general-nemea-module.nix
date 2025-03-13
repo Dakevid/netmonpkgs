@@ -2,7 +2,7 @@
 with lib;
 let
   cfg = config.services.general-nemea-module;
-  # Defaults for optional instance fields
+  # Default values for optional instance keys.
   defaultInstance = {
     binary = null;
     args = "";
@@ -17,8 +17,8 @@ in {
       description = "Nemea module package";
     };
     instances = mkOption {
-      # We forego deep type-checking by accepting any attribute set for each instance.
-      type = types.attrsOf types.any;
+      # Accept an attribute set for each instance without deep type-checking.
+      type = types.attrsOf lib.types.anything;
       default = {};
       description = ''
         Configuration for multiple nemea module service instances.
@@ -35,13 +35,12 @@ in {
 
   config = mkIf cfg.enable {
     systemd.services = mapAttrs' (instanceName: instance: let
-         # Merge user-provided instance attributes with our defaults.
+         # Merge each instance with our default values.
          inst = instance // defaultInstance;
-         # Resolve the binary path.
+         # Determine the binary path: if no custom binary is given, default to the package's bin directory.
          binaryPath = if inst.binary != null
                       then inst.binary
                       else "${cfg.package}/bin/${inst.module}";
-         # Use additional args (empty string by default)
          argsStr = inst.args;
       in {
         "nemea-module@${instanceName}" = {
