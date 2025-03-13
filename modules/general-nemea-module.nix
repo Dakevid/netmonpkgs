@@ -13,6 +13,11 @@ in {
     instances = mkOption {
       type = types.attrsOf (types.submodule {
         options = {
+          name = mkOption {
+            type = types.str;
+            default = "";
+            description = "Optional instance name. If not provided, the instance key will be used.";
+          };
           module = mkOption {
             type = types.str;
             description = "Name of nemea module";
@@ -36,22 +41,26 @@ in {
       description = ''
         Configuration for multiple nemea module service instances.
         Each attribute key is an instance name and its value is a configuration
-        attribute set containing the module name, input and output interfaces, and additional arguments.
+        attribute set.
       '';
     };
   };
 
   config = mkIf cfg.enable {
-    systemd.services = lib.mapAttrs' (instanceName: cfgInstance: {
-      "general-nemea-module@${instanceName}" = {
-        description = "${cfgInstance.module} service instance (${instanceName})";
-        after = [ "network.target" ];
-        wantedBy = [ "multi-user.target" ];
-        serviceConfig = {
-          ExecStart = "${cfg.package}/bin/${cfgInstance.module} -i \"${cfgInstance.in-ifc},${cfgInstance.out-ifc}\" ${cfgInstance.args}";
-          Restart = "always";
+    systemd.services = lib.mapAttrs' (instanceName: cfgInstance:
+      let
+        instanceDisplayName = if cfgInstance.name != "" then cfgInstance.name else instanceName;
+      in {
+        "general-nemea-module@${instanceName}" = {
+          description = "${cfgInstance.module} service instance (${instanceDisplayName})";
+          after = [ "network.target" ];
+          wantedBy = [ "multi-user.target" ];
+          serviceConfig = {
+            ExecStart = "${cfg.package}/bin/${cfgInstance.module} -i \"${cfgInstance.in-ifc},${cfgInstance.out-ifc}\" ${cfgInstance.args}";
+            Restart = "always";
+          };
         };
-      };
-    }) cfg.instances;
+      }
+    ) cfg.instances;
   };
 }
