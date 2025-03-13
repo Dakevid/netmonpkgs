@@ -10,44 +10,22 @@ in {
       default = pkgs.nemea-modules;
       description = "Nemea module package";
     };
+    # Use a fixed attributes type instead of a submodule to avoid requiring a "name" attribute.
     instances = mkOption {
-      type = types.attrsOf (types.submodule {
-        options = {
-          module = mkOption {
-            type = types.str;
-            description = "Name of the nemea module (should match the binary name if 'binary' is not overridden)";
-          };
-          binary = mkOption {
-            type = types.str;
-            default = null;
-            description = "Optional absolute path to the binary. If null, defaults to package's bin directory.";
-          };
-          in-ifc = mkOption {
-            type = types.str;
-            description = "Input interface for the nemea module";
-          };
-          out-ifc = mkOption {
-            type = types.str;
-            description = "Output interface for the nemea module";
-          };
-          args = mkOption {
-            type = types.listOf types.str;
-            default = [];
-            description = "Additional arguments for the nemea module (each argument is a separate string)";
-          };
-          displayName = mkOption {
-            type = types.str;
-            default = "";
-            description = "Optional display name for the service instance";
-          };
-        };
+      type = types.attrsOf (types.attrs {
+        module = types.str;
+        binary = types.nullOr types.str;
+        in-ifc = types.str;
+        out-ifc = types.str;
+        args = types.listOf types.str;
+        displayName = types.str;
       });
       default = {};
       description = ''
         Configuration for multiple nemea module service instances.
         Each attribute key is an instance name and its value is a configuration
         attribute set containing the module name, input and output interfaces,
-        and optional binary override, additional arguments, and display name.
+        optional binary override, additional arguments, and display name.
       '';
     };
   };
@@ -61,7 +39,7 @@ in {
                   else lib.concatStringsSep " " (map builtins.escapeShellArg cfgInstance.args);
       in {
         "nemea-module@${instanceName}" = {
-          description = if cfgInstance.displayName != "" 
+          description = if cfgInstance.displayName != ""
                         then "${cfgInstance.displayName} service instance (${instanceName})"
                         else "${cfgInstance.module} service instance (${instanceName})";
           after = [ "network.target" ];
