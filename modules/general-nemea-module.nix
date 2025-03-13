@@ -36,17 +36,15 @@ in {
     };
   };
 
-  config = mkIf config.services.general-nemea-module.enable (
-    mapAttrs' (name: cfg: {
-      systemd.services."general-nemea-module@${name}" = {
-        description = "${cfg.module} service instance ${name}";
-        after = [ "network.target" ];
-        wantedBy = [ "multi-user.target" ];
-        serviceConfig = {
-          ExecStart = "${cfg.package}/bin/${cfg.module} -i \"${cfg.in-ifc},${cfg.out-ifc}\" ${cfg.args}";
-          Restart = "always";
-        };
+  config = {
+    systemd.services = mapAttrs' (name: cfg: {
+      description = "${cfg.module} service instance ${name}";
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        ExecStart = "${cfg.package}/bin/${cfg.module} -i \"${cfg.in-ifc},${cfg.out-ifc}\" ${cfg.args}";
+        Restart = "always";
       };
-    }) cfgs
-  );
+    }) (if config.services.general-nemea-module.enable then cfgs else {});
+  };
 }
