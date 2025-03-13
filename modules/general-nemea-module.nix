@@ -13,10 +13,10 @@ in {
     instances = mkOption {
       type = types.attrsOf (types.submodule {
         options = {
-          name = mkOption {
-            type = types.str;
-            default = "";
-            description = "Optional instance name. If not provided, the instance key will be used.";
+          displayName = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = "Optional instance display name. If not provided, the instance key will be used.";
           };
           module = mkOption {
             type = types.str;
@@ -40,8 +40,7 @@ in {
       default = {};
       description = ''
         Configuration for multiple nemea module service instances.
-        Each attribute key is an instance name and its value is a configuration
-        attribute set.
+        Each attribute key is an instance name and its value is a configuration attribute set.
       '';
     };
   };
@@ -49,9 +48,9 @@ in {
   config = mkIf cfg.enable {
     systemd.services = lib.mapAttrs' (instanceName: cfgInstance:
       let
-        instanceDisplayName = if cfgInstance.name != "" then cfgInstance.name else instanceName;
+        instanceDisplayName = if cfgInstance.displayName != null then cfgInstance.displayName else instanceName;
       in {
-        "general-nemea-module@${instanceName}" = {
+        "general-nemea-module@${instanceDisplayName}" = {
           description = "${cfgInstance.module} service instance (${instanceDisplayName})";
           after = [ "network.target" ];
           wantedBy = [ "multi-user.target" ];
