@@ -1,18 +1,18 @@
 { config, lib, pkgs, ... }:
 with lib;
 let
-  cfgs = config.services.general-nemea-module.instances;
+  cfg = config.services.general-nemea-module;
 in {
   options.services.general-nemea-module = {
     enable = mkEnableOption "Enable nemea module service";
-    instances = mkOption {
+    package = mkOption {
+      type = types.package;
+      default = pkgs.nemea-modules;
+      description = "Nemea module package";
+    };
+    modules = mkOption {
       type = types.attrsOf (types.submodule {
         options = {
-          package = mkOption {
-            type = types.package;
-            default = pkgs.nemea-modules;
-            description = "Nemea module package";
-          };
           module = mkOption {
             type = types.str;
             description = "Name of nemea module";
@@ -32,19 +32,19 @@ in {
           };
         };
       });
-      description = "Instances of the nemea module service";
+      description = "A set of Nemea module configurations.";
     };
   };
 
-  config = {
-    systemd.services = mapAttrs' (name: cfg: {
-      description = "${cfg.module} service instance ${name}";
+  config = mkIf cfg.enable {
+    systemd.services = mapAttrs' (name: moduleCfg: {
+      description = "${moduleCfg.module} service instance ${name}";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
-        ExecStart = "${cfg.package}/bin/${cfg.module} -i \"${cfg.in-ifc},${cfg.out-ifc}\" ${cfg.args}";
+        ExecStart = "${cfg.package}/bin/${moduleCfg.module} -i \"${moduleCfg.in-ifc},${moduleCfg.out-ifc}\" ${moduleCfg.args}";
         Restart = "always";
       };
-    }) (if config.services.general-nemea-module.enable then cfgs else {});
+    }) cfg.modules;
   };
 }
