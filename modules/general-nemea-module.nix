@@ -38,6 +38,7 @@ in {
 
   config = mkIf cfg.enable {
     systemd.services = mapAttrs' (name: moduleCfg: {
+      name = name;
       description = "${moduleCfg.module} service instance ${name}";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
