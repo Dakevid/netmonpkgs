@@ -2,7 +2,7 @@
 with lib;
 let
   cfg = config.services.general-nemea-module;
-  # Default values for optional instance fields.
+  # Defaults for optional instance fields
   defaultInstance = {
     binary = null;
     args = "";
@@ -17,37 +17,32 @@ in {
       description = "Nemea module package";
     };
     instances = mkOption {
-      # Each instance is expected to be a set with these keys.
-      type = types.attrsOf (types.attrs {
-        module   = types.str;
-        binary   = types.nullOr types.str;
-        in-ifc   = types.str;
-        out-ifc  = types.str;
-        args     = types.str;
-        displayName = types.str;
-      });
+      # We forego deep type-checking by accepting any attribute set for each instance.
+      type = types.attrsOf types.any;
       default = {};
       description = ''
         Configuration for multiple nemea module service instances.
-        Each attribute key is an instance name and its value is a set containing:
-          - module: the name of the module (mandatory)
-          - in-ifc: the input interface (mandatory)
-          - out-ifc: the output interface (mandatory)
-          - binary: (optional) override for the binary path; if omitted, the default is ${config.services.general-nemea-module.package}/bin/<module>
-          - args: (optional) additional arguments (default is empty)
-          - displayName: (optional) display name for the service instance (default is empty)
+        Each attribute key is an instance name and its value must be an attribute set containing:
+          - module: (string) the name of the module (mandatory)
+          - in-ifc: (string) the input interface (mandatory)
+          - out-ifc: (string) the output interface (mandatory)
+          - binary: (optional, string or null) override for the binary path
+          - args: (optional, string) additional arguments (default: "")
+          - displayName: (optional, string) display name for the service instance (default: "")
       '';
     };
   };
 
   config = mkIf cfg.enable {
-    systemd.services = lib.mapAttrs' (instanceName: instance: let
-        # Merge each instance with default values for optional fields.
-        inst = instance // defaultInstance;
-        # Determine the binary path.
-        binaryPath = if inst.binary != null
-                     then inst.binary
-                     else "${cfg.package}/bin/${inst.module}";
+    systemd.services = mapAttrs' (instanceName: instance: let
+         # Merge user-provided instance attributes with our defaults.
+         inst = instance // defaultInstance;
+         # Resolve the binary path.
+         binaryPath = if inst.binary != null
+                      then inst.binary
+                      else "${cfg.package}/bin/${inst.module}";
+         # Use additional args (empty string by default)
+         argsStr = inst.args;
       in {
         "nemea-module@${instanceName}" = {
           description = if inst.displayName != ""
@@ -56,7 +51,7 @@ in {
           after = [ "network.target" ];
           wantedBy = [ "multi-user.target" ];
           serviceConfig = {
-            ExecStart = "${binaryPath} -i \"${inst.in-ifc},${inst.out-ifc}\" ${inst.args}";
+            ExecStart = "${binaryPath} -i \"${inst.in-ifc},${inst.out-ifc}\" ${argsStr}";
             Restart = "always";
           };
         };
