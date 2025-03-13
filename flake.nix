@@ -5,41 +5,36 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
   };
 
-  outputs = { self, nixpkgs, ... }:
-    let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; };
-    in {
-      packages = {
-        libfds = pkgs.callPackage ./pkgs/libfds/default.nix { };
-        nemea-framework = pkgs.callPackage ./pkgs/nemea-framework/default.nix { };
-        ipfixcol2 = pkgs.callPackage ./pkgs/ipfixcol2/default.nix {
-          libfds = self.packages.libfds;
-          nemea-framework = self.packages.nemea-framework;
-        };
-        nemea-modules = pkgs.callPackage ./pkgs/nemea-modules/default.nix {
-          nemea-framework = self.packages.nemea-framework;
-        };
-      };
+  outputs = { nixpkgs, ... }:
+  let
+    systems = [ "x86_64-linux" ];
 
-      overlays = {
-        default = final: prev: {
-          libfds = final.callPackage ./pkgs/libfds/default.nix { };
-          nemea-framework = final.callPackage ./pkgs/nemea-framework/default.nix { };
-          ipfixcol2 = final.callPackage ./pkgs/ipfixcol2/default.nix {
-            libfds = self.packages.libfds;
-            nemea-framework = self.packages.nemea-framework;
-          };
-          nemea-modules = final.callPackage ./pkgs/nemea-modules/default.nix {
-            nemea-framework = self.packages.nemea-framework;
-          };
-        };
+    mkPkgs = callPackage: let pkg = {
+      libfds = callPackage ./pkgs/libfds/default.nix { };
+      nemea-framework = callPackage ./pkgs/nemea-framework/default.nix { };
+      ipfixcol2 = callPackage ./pkgs/ipfixcol2/default.nix {
+        libfds = pkg.libfds;
+        nemea-framework = pkg.nemea-framework;
       };
+      nemea-modules = callPackage ./pkgs/nemea-modules/default.nix {
+        nemea-framework = pkg.nemea-framework;
+      };
+    }; in pkg;
+  in {
+    packages = builtins.listToAttrs (map (system: {
+      name = system;
+      value = let
+        pkgs = import nixpkgs { inherit system; };
+      in mkPkgs pkgs.callPackage;
+    }) systems);
 
-      nixosModules = {
-        ipfixcol2 = import ./modules/ipfixcol2.nix;
-        general-nemea-module = import ./modules/general-nemea-module.nix;
-      };
+    overlays = {
+      default = final: prev: mkPkgs final.callPackage;
     };
-}
 
+    nixosModules = {
+      ipfixcol2 = import ./modules/ipfixcol2.nix;
+      general-nemea-module = import ./modules/general-nemea-module.nix;
+    };
+  };
+}
