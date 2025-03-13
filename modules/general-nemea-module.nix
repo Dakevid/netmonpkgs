@@ -13,11 +13,6 @@ in {
     instances = mkOption {
       type = types.attrsOf (types.submodule {
         options = {
-          name = mkOption {
-            type = types.str;
-            default = "";
-            description = "Ignored, taken from the instance key.";
-          };
           module = mkOption {
             type = types.str;
             description = "Name of the nemea module (should match the binary name if 'binary' is not overridden)";
@@ -46,6 +41,8 @@ in {
             description = "Optional display name for the service instance";
           };
         };
+        # Override getSubModules so that no extra fields (like "name") are required.
+        getSubModules = _: {};
       });
       default = {};
       description = ''
@@ -57,23 +54,21 @@ in {
 
   config = mkIf cfg.enable {
     systemd.services = lib.mapAttrs' (instanceName: cfgInstance: let
-        # Override the (ignored) name with the instance key.
-        instance = cfgInstance // { name = instanceName; };
-        binaryPath = if instance.binary != null
-                     then instance.binary
-                     else "${cfg.package}/bin/${instance.module}";
-        argsStr = if instance.args == [] then ""
-                  else lib.concatStringsSep " " (map builtins.escapeShellArg instance.args);
+        binaryPath = if cfgInstance.binary != null
+                     then cfgInstance.binary
+                     else "${cfg.package}/bin/${cfgInstance.module}";
+        argsStr = if cfgInstance.args == [] then ""
+                  else lib.concatStringsSep " " (map builtins.escapeShellArg cfgInstance.args);
       in {
         "nemea-module@${instanceName}" = {
-          description = if instance.displayName != ""
-                        then "${instance.displayName} service instance (${instanceName})"
-                        else "${instance.module} service instance (${instanceName})";
+          description = if cfgInstance.displayName != ""
+                        then "${cfgInstance.displayName} service instance (${instanceName})"
+                        else "${cfgInstance.module} service instance (${instanceName})";
           after = [ "network.target" ];
           wantedBy = [ "multi-user.target" ];
           serviceConfig = {
             ExecStart = ''
-              ${binaryPath} -i "${builtins.escapeShellArg instance."in-ifc"},${builtins.escapeShellArg instance."out-ifc"}" ${argsStr}
+              ${binaryPath} -i "${builtins.escapeShellArg cfgInstance."in-ifc"},${builtins.escapeShellArg cfgInstance."out-ifc"}" ${argsStr}
             '';
             Restart = "always";
           };
