@@ -1,5 +1,7 @@
 { config, lib, pkgs, ... }:
+
 with lib;
+
 let
   cfg = config.services.general-nemea-module;
 in {
@@ -37,8 +39,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    systemd.services = mapAttrs' (name: moduleCfg: {
-      name = name;
+    systemd.services = mapAttrs (name: moduleCfg: {
       description = "${moduleCfg.module} service instance ${name}";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
