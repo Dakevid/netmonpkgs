@@ -13,53 +13,66 @@ in {
     instances = mkOption {
       type = types.attrsOf (types.submodule {
         options = {
-          displayName = mkOption {
-            type = types.nullOr types.str;
-            default = null;
-            description = "Optional instance display name. If not provided, the instance key will be used.";
-          };
           module = mkOption {
             type = types.str;
-            description = "Name of nemea module";
+            description = "Name of the nemea module (should match the binary name if 'binary' is not overridden)";
+          };
+          binary = mkOption {
+            type = types.str;
+            default = null;
+            description = "Optional absolute path to the binary. If null, defaults to package's bin directory.";
           };
           in-ifc = mkOption {
             type = types.str;
-            description = "Input interface for nemea module";
+            description = "Input interface for the nemea module";
           };
           out-ifc = mkOption {
             type = types.str;
-            description = "Output interface for nemea module";
+            description = "Output interface for the nemea module";
           };
           args = mkOption {
+            type = types.listOf types.str;
+            default = [];
+            description = "Additional arguments for the nemea module (each argument is a separate string)";
+          };
+          displayName = mkOption {
             type = types.str;
             default = "";
-            description = "Additional arguments for nemea module";
+            description = "Optional display name for the service instance";
           };
         };
       });
       default = {};
       description = ''
         Configuration for multiple nemea module service instances.
-        Each attribute key is an instance name and its value is a configuration attribute set.
+        Each attribute key is an instance name and its value is a configuration
+        attribute set containing the module name, input and output interfaces,
+        and optional binary override, additional arguments, and display name.
       '';
     };
   };
 
   config = mkIf cfg.enable {
-    systemd.services = lib.mapAttrs' (instanceName: cfgInstance:
-      let
-        instanceDisplayName = if cfgInstance.displayName != null then cfgInstance.displayName else instanceName;
+    systemd.services = lib.mapAttrs' (instanceName: cfgInstance: let
+        binaryPath = if cfgInstance.binary != null
+                     then cfgInstance.binary
+                     else "${cfg.package}/bin/${cfgInstance.module}";
+        argsStr = if cfgInstance.args == [] then ""
+                  else lib.concatStringsSep " " (map builtins.escapeShellArg cfgInstance.args);
       in {
-        "general-nemea-module@${instanceDisplayName}" = {
-          description = "${cfgInstance.module} service instance (${instanceDisplayName})";
+        "nemea-module@${instanceName}" = {
+          description = if cfgInstance.displayName != "" 
+                        then "${cfgInstance.displayName} service instance (${instanceName})"
+                        else "${cfgInstance.module} service instance (${instanceName})";
           after = [ "network.target" ];
           wantedBy = [ "multi-user.target" ];
           serviceConfig = {
-            ExecStart = "${cfg.package}/bin/${cfgInstance.module} -i \"${cfgInstance.in-ifc},${cfgInstance.out-ifc}\" ${cfgInstance.args}";
+            ExecStart = ''
+              ${binaryPath} -i "${builtins.escapeShellArg cfgInstance.in-ifc},${builtins.escapeShellArg cfgInstance.out-ifc}" ${argsStr}
+            '';
             Restart = "always";
           };
         };
-      }
-    ) cfg.instances;
+      }) cfg.instances;
   };
 }
