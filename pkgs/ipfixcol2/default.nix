@@ -9,7 +9,9 @@
   rdkafka,
   zlib,
   lz4,
-  nemea-framework ? null
+  nemea-framework,
+  git,
+  cacert
 }:
 
 stdenv.mkDerivation rec {
@@ -19,22 +21,29 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "CESNET";
     repo = "ipfixcol2";
-    tag = "v${version}";
-    hash = "sha256-SVGS2ipPjG4LOH99mv7QM/cgT2XaCya9P5/udup2x9g=";
+    #tag = "v${version}";
+    rev = "bd59f749c1a0bfd5c4fd45ae5fefaff7e81f45b8";
+    hash = "sha256-0yGb2zc0nmTbmeOi6hQEsZu0ImX+h38jqO87qLiipCI=";
   };
 
-  nativeBuildInputs = [ cmake ];
-  buildInputs = [ libfds docutils libxml2 rdkafka zlib lz4 ]
-    ++ (if nemea-framework != null then [ nemea-framework ] else []);
+  nativeBuildInputs = [ cmake git cacert ];
+  buildInputs = [ libfds docutils libxml2 rdkafka zlib lz4 nemea-framework ];
 
-  postInstall = if nemea-framework != null then ''
+  postInstall = ''
     cd ../extra_plugins/output/unirec
     mkdir build
     cd build
     cmake .. -DCMAKE_INSTALL_PREFIX=$out -DCMAKE_C_FLAGS="$CFLAGS -Wno-error=implicit-function-declaration" -DCMAKE_INSTALL_LIBDIR=lib
     make
     make install
-  '' else "";
+    cd ../../clickhouse
+    mkdir build
+    cd build
+    cmake .. -DCMAKE_INSTALL_PREFIX=$out -DCMAKE_C_FLAGS="$CFLAGS -Wno-error=implicit-function-declaration" -DCMAKE_INSTALL_LIBDIR=lib
+    make
+    echo "Make install cliuckhouse"
+    make install
+  '';
 
   meta = {
     description = "Flexible, high-performance NetFlow v5/v9 and IPFIX flow data collector designed to be extensible by plugins";
