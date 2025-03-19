@@ -7,8 +7,7 @@
   git,
   cacert,
   python3,
-  fetchPypi,
-  boost
+  boost,
 }:
 
 let
@@ -34,8 +33,8 @@ stdenv.mkDerivation rec {
       --replace "add_subdirectory(pkg)" "# add_subdirectory(pkg)"
   '';
 
-  nativeBuildInputs = [ cmake git cacert boost ];
-  buildInputs = [ nemea-framework pythonEnv];
+  nativeBuildInputs = [ cmake git cacert ];
+  buildInputs = [ nemea-framework pythonEnv boost ];
 
 
   meta = {

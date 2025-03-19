@@ -22,6 +22,12 @@
       wif = callPackage ./pkgs/wif/default.nix { 
         nemea-framework = pkg.nemea-framework;
       };
+      libdst = callPackage ./pkgs/libdst/default.nix { };
+      decrypto = callPackage ./pkgs/decrypto/default.nix {
+        wif = pkg.wif;
+        nemea-framework = pkg.nemea-framework;
+        libdst = pkg.libdst;
+      };
     }; in pkg;
   in {
     packages = builtins.listToAttrs (map (system: {
