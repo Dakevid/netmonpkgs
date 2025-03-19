@@ -22,6 +22,8 @@ The following packages are available:
 
 - **decrypto**: NEMEA module for detection of cryptomining, based on libnemea++ and libwif.
 
+- **telemetry**: Library designed for the collection and processing of telemetry data.
+
 ## NixOS Modules
 
 This repository includes the following NixOS modules:
@@ -35,7 +37,7 @@ This repository includes the following NixOS modules:
 ### Shell
 
 ```
-nix shell nix shell github:jaroslavpesek/netmonpkgs#packages.x86_64-linux.nemea-modules
+nix shell github:jaroslavpesek/netmonpkgs#packages.x86_64-linux.nemea-modules
 logger -i u:test
 ```
 

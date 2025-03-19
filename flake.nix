@@ -28,6 +28,7 @@
         nemea-framework = pkg.nemea-framework;
         libdst = pkg.libdst;
       };
+      telemetry = callPackage ./pkgs/telemetry/default.nix { };
     }; in pkg;
   in {
     packages = builtins.listToAttrs (map (system: {
