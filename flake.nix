@@ -19,6 +19,9 @@
       nemea-modules = callPackage ./pkgs/nemea-modules/default.nix {
         nemea-framework = pkg.nemea-framework;
       };
+      wif = callPackage ./pkgs/wif/default.nix { 
+        nemea-framework = pkg.nemea-framework;
+      };
     }; in pkg;
   in {
     packages = builtins.listToAttrs (map (system: {
