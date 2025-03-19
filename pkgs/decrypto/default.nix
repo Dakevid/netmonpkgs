@@ -7,23 +7,27 @@
   git,
   cacert,
   libdst,
-  python3,
   boost,
-  fetchPypi
+  fetchPypi,
+  python39
 }:
 
 let
-  nemea-pytrap = python3.pkgs.buildPythonPackage rec {
+  nemea-pytrap = python39.pkgs.buildPythonPackage rec {
     pname = "nemea-pytrap";
     version = "0.17.0";
     src = fetchPypi {
       inherit pname version;
       sha256 = "sha256-Bpst1oU9ZbODgpF0oayjfT20wiheoG3HiLRWYyaqPa8=";
     };
-    propagatedBuildInputs = with python3.pkgs; [ setuptools nemea-framework ];
+    propagatedBuildInputs = with python39.pkgs; [ setuptools nemea-framework ];
   };
 
-  pythonEnv = python3.withPackages (ps: [ nemea-pytrap ps.numpy ps.xxhash ]);
+  pythonEnv = python39.withPackages (ps: [
+    nemea-pytrap
+    ps.numpy
+    ps.xxhash
+  ]);
 in
 stdenv.mkDerivation rec {
   pname = "decrypto";
@@ -32,8 +36,7 @@ stdenv.mkDerivation rec {
   src = ./decrypto-main.tar;
 
   postPatch = ''
-    substituteInPlace CMakeLists.txt \
-      --replace "add_subdirectory(pkg)" "# add_subdirectory(pkg)"
+    substituteInPlace CMakeLists.txt --replace "add_subdirectory(pkg)" "# add_subdirectory(pkg)"
   '';
 
   nativeBuildInputs = [ cmake git cacert ];
