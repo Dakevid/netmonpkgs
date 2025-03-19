@@ -16,6 +16,8 @@ The following packages are available:
 
 - **nemea-modules**: A set of modules for the NEMEA framework.
 
+- **nemea-modules**: A set of modules ng for the NEMEA framework.
+
 - **wif**: Library for fast development of (heterogeneous) detection and classification modules for (Encrypted) Network Traffic Analysis.
 
 - **libdst**: Library implementation of Dempster-Shafer Theory.
