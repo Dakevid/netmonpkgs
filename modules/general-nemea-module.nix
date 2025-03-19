@@ -9,7 +9,7 @@ in {
     enable = mkEnableOption "Enable nemea module service";
     package = mkOption {
       type = types.package;
-      default = pkgs.nemea-modules;
+      default = pkgs.nemea-modules-meta;
       description = "Nemea module package";
     };
     modules = mkOption {

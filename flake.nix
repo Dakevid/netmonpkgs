@@ -32,6 +32,11 @@
         libdst = pkg.libdst;
       };
       telemetry = callPackage ./pkgs/telemetry/default.nix { };
+      nemea-modules-meta = callPackage ./pkgs/nemea-modules-meta/default.nix {
+        nemea-modules = pkg.nemea-modules;
+        nemea-modules-ng = pkg.nemea-modules-ng;
+        decrypto = pkg.decrypto;
+      };
     }; in pkg;
   in {
     packages = builtins.listToAttrs (map (system: {
