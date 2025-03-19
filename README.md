@@ -26,6 +26,8 @@ The following packages are available:
 
 - **telemetry**: Library designed for the collection and processing of telemetry data.
 
+- **nemea-modules-meta**: Metapackage of nemea modules.
+
 ## NixOS Modules
 
 This repository includes the following NixOS modules:
