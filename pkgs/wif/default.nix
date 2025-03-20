@@ -6,12 +6,12 @@
   cmake,
   git,
   cacert,
-  python39,
+  python3,
   boost,
 }:
 
 let
-  pythonEnv = python39.withPackages (ps: [ ps.numpy ]);
+  pythonEnv = python3.withPackages (ps: [ ps.numpy ]);
 in
 stdenv.mkDerivation rec {
   pname = "wif";
