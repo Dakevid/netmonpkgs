@@ -27,6 +27,7 @@ let
     nemea-pytrap
     ps.numpy
     ps.xxhash
+    ps.scikit-learn
   ]);
 in
 stdenv.mkDerivation rec {
@@ -45,6 +46,7 @@ stdenv.mkDerivation rec {
   postInstall = ''
     tar -xvf $src -C $TMPDIR
     cp -r $TMPDIR/decrypto-main/aggregator $out/bin/
+    cp -r $TMPDIR/decrypto-main/extras $out/bin/decryto_extras
     ln -s ${pythonEnv} $out/bin/python-decrypto
   '';
 

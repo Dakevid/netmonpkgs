@@ -11,7 +11,7 @@
 }:
 
 let
-  pythonEnv = python3.withPackages (ps: [ ps.numpy ]);
+  pythonEnv = python3.withPackages (ps: [ ps.numpy ps.scikit-learn ]);
 in
 stdenv.mkDerivation rec {
   pname = "wif";
