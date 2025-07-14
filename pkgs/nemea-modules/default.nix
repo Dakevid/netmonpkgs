@@ -14,6 +14,7 @@
   bash,
   nemea-framework,
   python3,
+  lua,
   fetchPypi
 }:
 
@@ -46,7 +47,7 @@ stdenv.mkDerivation rec {
     ./configure CFLAGS="-Wno-error=int-conversion" --prefix=$out
   '';
 
-  buildInputs = [ autoconf libtool libxml2 automake gnumake pkg-config bash bison flex libidn nemea-framework pythonEnv ];
+  buildInputs = [ autoconf libtool libxml2 automake gnumake pkg-config bash bison flex libidn lua nemea-framework pythonEnv ];
 
   meta = {
     description = "NEMEA Modules";
