@@ -38,8 +38,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "CESNET";
     repo = "Nemea-Modules";
-    rev = "c475786fe174b765ab37595dc91aea6317f05ccd";
-    hash = "sha256-5Kd4B60whQNjlzWOBN7jPbWo/eA4m7fbRajbqqXwb80=";
+    rev = "320a875b11a4d23600d122a37360112719044793";
+    hash = "sha256-Ia3fB2WNN8OS1XssSQzxxGB7sRad4D6QUVDd0PYzXow=";
   };
 
   configurePhase = ''
