@@ -26,7 +26,7 @@ let
       inherit pname version;
       sha256 = "sha256-Bpst1oU9ZbODgpF0oayjfT20wiheoG3HiLRWYyaqPa8=";
     };
-    propagatedBuildInputs = with python3.pkgs; [ setuptools nemea-framework ];
+    propagatedBuildInputs = with python3.pkgs; [ setuptools nemea-framework geoip2 ];
   };
 
   pythonEnv = python3.withPackages (ps: [ nemea-pytrap ]);
@@ -38,8 +38,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "CESNET";
     repo = "Nemea-Modules";
-    rev = "320a875b11a4d23600d122a37360112719044793";
-    hash = "sha256-Ia3fB2WNN8OS1XssSQzxxGB7sRad4D6QUVDd0PYzXow=";
+    rev = "5ef7aa49239c6530cfddd8097bf755853241cd19";
+    hash = "sha256-32trcLNn4kma8SYptrE/56mNjE4kUg2lQYc45wnvdI4=";
   };
 
   configurePhase = ''
