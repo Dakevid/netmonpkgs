@@ -22,8 +22,8 @@ stdenv.mkDerivation rec {
     owner = "CESNET";
     repo = "ipfixcol2";
     #tag = "v${version}";
-    rev = "bd59f749c1a0bfd5c4fd45ae5fefaff7e81f45b8";
-    hash = "sha256-0yGb2zc0nmTbmeOi6hQEsZu0ImX+h38jqO87qLiipCI=";
+    rev = "80c389b43e12cfaffa2ea622b829a6371b7d054c";
+    hash = "sha256-xjYuAMAME6Bhb4h3iFHf1RkTmsUcjhoJyfgorktDDc0=";
   };
 
   nativeBuildInputs = [ cmake git cacert ];
