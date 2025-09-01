@@ -10,7 +10,8 @@
   ncurses,
   git,
   cacert,
-  fuse3
+  fuse3,
+  boost
 }:
 
 let
@@ -33,8 +34,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "CESNET";
     repo = "nemea-modules-ng";
-    rev = "b29101c5734b431bb79e4ebb42bf1818c319a46e";
-    hash = "sha256-UNLb9xMjvl8slMcUUnzK9S+rMYWACyZnbXXEBrxhS3c=";
+    rev = "07693934dfb922f95dbaa9f5fae8cafd2a823dde";
+    hash = "sha256-lI3g5H4zS63YIqxYw4y/azpBKWKUz4wlqvhVFL0eST0=";
   };
 
   postPatch = ''
@@ -47,7 +48,7 @@ stdenv.mkDerivation rec {
   ];
 
   nativeBuildInputs = [ cmake pkg-config git cacert ];
-  buildInputs = [  nemea-framework pythonEnv ncurses fuse3 ];
+  buildInputs = [  nemea-framework pythonEnv ncurses fuse3 boost ];
 
   meta = {
     description = "NEMEA Modules NG";
