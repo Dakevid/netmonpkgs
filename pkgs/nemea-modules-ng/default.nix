@@ -11,7 +11,8 @@
   git,
   cacert,
   fuse3,
-  boost
+  boost,
+  libmaxminddb
 }:
 
 let
@@ -34,8 +35,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "CESNET";
     repo = "nemea-modules-ng";
-    rev = "07693934dfb922f95dbaa9f5fae8cafd2a823dde";
-    hash = "sha256-lI3g5H4zS63YIqxYw4y/azpBKWKUz4wlqvhVFL0eST0=";
+    rev = "16dfcf0dc9a0cda905c3a316f79406be09c8d342";
+    hash = "sha256-gFBCuelhxgB4u0d9oGLmE9a+NE5hrdZgrqLKLPqGiL8=";
   };
 
   postPatch = ''
@@ -48,7 +49,7 @@ stdenv.mkDerivation rec {
   ];
 
   nativeBuildInputs = [ cmake pkg-config git cacert ];
-  buildInputs = [  nemea-framework pythonEnv ncurses fuse3 boost ];
+  buildInputs = [ nemea-framework pythonEnv ncurses fuse3 boost libmaxminddb ];
 
   meta = {
     description = "NEMEA Modules NG";
