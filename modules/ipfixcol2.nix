@@ -18,21 +18,34 @@ with lib;
       description = "Path to directory with IPFIX Information Elements definitions (optional)";
       example = "/etc/ipfix-elements/";
     };
+    unirecMappingFile = mkOption {
+      type = types.nullOr types.path;
+      default = null;
+      description = "Path to UniRec fields mapping file (optional, expected to match <mappingFile> path in config XML)";
+      example = "/etc/ipfixcol2/unirec-mapping.xml";
+    };
   };
 
   config = mkIf config.services.ipfixcol2.enable {
     environment.etc."ipfixcol2/${builtins.baseNameOf config.services.ipfixcol2.configXml}" = {
       source = config.services.ipfixcol2.configXml;
     };
+
+    # Only mount the mapping file if it's provided
+    environment.etc."ipfixcol2/unirec-mapping.xml" = mkIf (config.services.ipfixcol2.unirecMappingFile != null) {
+      source = config.services.ipfixcol2.unirecMappingFile;
+    };
+
     systemd.services.ipfixcol2 = {
       description = "ipfixcol2 service";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = let
-        elementsArg = if config.services.ipfixcol2.elementsDir != "" then "-e ${config.services.ipfixcol2.elementsDir}" else "";
+        cfg = config.services.ipfixcol2;
+        elementsArg = if cfg.elementsDir != "" then "-e ${cfg.elementsDir}" else "";
       in {
-        ExecStart = "${pkgs.ipfixcol2}/bin/ipfixcol2 -c /etc/ipfixcol2/${builtins.baseNameOf  config.services.ipfixcol2.configXml} ${elementsArg} ${config.services.ipfixcol2.verbosity}";
+        ExecStart = "${pkgs.ipfixcol2}/bin/ipfixcol2 -c /etc/ipfixcol2/${builtins.baseNameOf cfg.configXml} ${elementsArg} ${cfg.verbosity}";
         Restart = "always";
       };
     };
