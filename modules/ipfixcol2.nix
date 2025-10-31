@@ -12,6 +12,12 @@ with lib;
       default = "";
       description = "Verbosity level of ipfixcol2 (-v, -vv, -vvv)";
     };
+    elementsDir = mkOption {
+      type = types.str;
+      default = "";
+      description = "Path to directory with IPFIX Information Elements definitions (optional)";
+      example = "/etc/ipfix-elements/";
+    };
   };
 
   config = mkIf config.services.ipfixcol2.enable {
@@ -22,8 +28,11 @@ with lib;
       description = "ipfixcol2 service";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        ExecStart = "${pkgs.ipfixcol2}/bin/ipfixcol2 -c /etc/ipfixcol2/${builtins.baseNameOf config.services.ipfixcol2.configXml} ${config.services.ipfixcol2.verbosity}";
+
+      serviceConfig = let
+        elementsArg = if config.services.ipfixcol2.elementsDir != "" then "-e ${config.services.ipfixcol2.elementsDir}" else "";
+      in {
+        ExecStart = "${pkgs.ipfixcol2}/bin/ipfixcol2 -c /etc/ipfixcol2/${builtins.baseNameOf  config.services.ipfixcol2.configXml} ${elementsArg} ${config.services.ipfixcol2.verbosity}";
         Restart = "always";
       };
     };
