@@ -35,8 +35,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "CESNET";
     repo = "nemea-modules-ng";
-    rev = "c3f5e5c21be34fb41f4b8f15044dd3da20343629";
-    hash = "sha256-UZ/zPD3cXr7ZSFU5lzWsZfxdrj5XhabVtqSHOxddcH0=";
+    rev = "80f3fb33f628acb52c0cdfbd5d1124ba277187d5";
+    hash = "sha256-o/6DaR9gsHR2mCDSZf7rQa7zNytZNOeJNcifO39Rm1s=";
   };
 
   postPatch = ''
