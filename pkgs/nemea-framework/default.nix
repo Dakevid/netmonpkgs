@@ -18,8 +18,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "CESNET";
     repo = "Nemea-Framework";
-    rev = "66562ae0498ef533969cc8cd464ffcf644cfe17d";
-    hash = "sha256-O+cDbvXVXHhNdEolirMgx4b3+TBlrVkbrpyw0qiuwZE=";
+    rev = "7c3c3790c9c9345c0251d445f84ce0afd866cd0c";
+    hash = "sha256-yb7vwoYHea8L3UJ8OjE3k861I7Fu8O7GOjKU4amInfg=";
   };
 
   postPatch = ''
