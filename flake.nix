@@ -12,6 +12,10 @@
         let
           pkg = {
             libfds = callPackage ./pkgs/libfds/default.nix { };
+            ensmallen = callPackage ./pkgs/ensmallen/default.nix { };
+            mlpack = callPackage ./pkgs/mlpack/default.nix {
+              ensmallen = pkg.ensmallen;
+            };
             nemea-framework = callPackage ./pkgs/nemea-framework/default.nix { };
             ipfixcol2 = callPackage ./pkgs/ipfixcol2/default.nix {
               libfds = pkg.libfds;
@@ -25,6 +29,8 @@
             };
             wif = callPackage ./pkgs/wif/default.nix {
               nemea-framework = pkg.nemea-framework;
+              mlpack = pkg.mlpack;
+              ensmallen = pkg.ensmallen;
             };
             libdst = callPackage ./pkgs/libdst/default.nix { };
             decrypto = callPackage ./pkgs/decrypto/default.nix {

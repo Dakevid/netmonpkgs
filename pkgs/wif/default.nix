@@ -8,6 +8,10 @@
   cacert,
   python3,
   boost,
+  armadillo,
+  mlpack,
+  cereal,
+  ensmallen
 }:
 
 let
@@ -15,13 +19,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "wif";
-  version = "3.1.1";
+  version = "3.2.0";
 
   src = fetchFromGitHub {
     owner = "CESNET";
     repo = "wif";
     tag = "v${version}";
-    hash = "sha256-JiXv67swf4+QNsIpalLqFLyteRFy/wf9LS2kNQaFYCs=";
+    hash = "sha256-BvNSgY2DG5vmFk+B+ww15tewYj9gUmZ2/+6dw4NBMY4=";
   };
 
   cmakeFlags = [
@@ -34,7 +38,7 @@ stdenv.mkDerivation rec {
   '';
 
   nativeBuildInputs = [ cmake git cacert ];
-  buildInputs = [ nemea-framework pythonEnv boost ];
+  buildInputs = [ nemea-framework pythonEnv boost armadillo mlpack cereal ensmallen ];
 
 
   meta = {
