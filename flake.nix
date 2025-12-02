@@ -17,15 +17,37 @@
               ensmallen = pkg.ensmallen;
             };
             nemea-framework = callPackage ./pkgs/nemea-framework/default.nix { };
+            ipranges = callPackage ./pkgs/ipranges/default.nix { };
+            typedcols = callPackage ./pkgs/typedcols/default.nix { };
+            idea-format = callPackage ./pkgs/idea-format/default.nix {
+              ipranges = pkg.ipranges;
+              typedcols = pkg.typedcols;
+            };
+            pynspect = callPackage ./pkgs/pynspect/default.nix {
+              ipranges = pkg.ipranges;
+            };
+            pytrap = callPackage ./pkgs/pytrap/default.nix {
+              nemea-framework = pkg.nemea-framework;
+            };
+            pycommon = callPackage ./pkgs/pycommon/default.nix {
+              nemea-framework = pkg.nemea-framework;
+              pytrap = pkg.pytrap;
+              idea-format = pkg.idea-format;
+              pynspect = pkg.pynspect;
+            };
             ipfixcol2 = callPackage ./pkgs/ipfixcol2/default.nix {
               libfds = pkg.libfds;
               nemea-framework = pkg.nemea-framework;
             };
             nemea-modules = callPackage ./pkgs/nemea-modules/default.nix {
               nemea-framework = pkg.nemea-framework;
+              pytrap = pkg.pytrap;
+              pycommon = pkg.pycommon;
             };
             nemea-modules-ng = callPackage ./pkgs/nemea-modules-ng/default.nix {
               nemea-framework = pkg.nemea-framework;
+              pytrap = pkg.pytrap;
+              pycommon = pkg.pycommon;
             };
             wif = callPackage ./pkgs/wif/default.nix {
               nemea-framework = pkg.nemea-framework;

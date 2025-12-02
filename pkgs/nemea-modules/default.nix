@@ -15,21 +15,12 @@
   nemea-framework,
   python3,
   lua,
-  fetchPypi
+  pytrap,
+  pycommon
 }:
 
 let
-  nemea-pytrap = python3.pkgs.buildPythonPackage rec {
-    pname = "nemea-pytrap";
-    version = "0.17.0";
-    src = fetchPypi {
-      inherit pname version;
-      sha256 = "sha256-Bpst1oU9ZbODgpF0oayjfT20wiheoG3HiLRWYyaqPa8=";
-    };
-    propagatedBuildInputs = with python3.pkgs; [ setuptools nemea-framework geoip2 ];
-  };
-
-  pythonEnv = python3.withPackages (ps: [ nemea-pytrap ]);
+  pythonEnv = python3.withPackages (ps: [ pytrap pycommon ]);
 in
 stdenv.mkDerivation rec {
   pname = "Nemea Modules";

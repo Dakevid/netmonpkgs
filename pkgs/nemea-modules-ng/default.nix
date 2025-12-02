@@ -4,7 +4,6 @@
   fetchFromGitHub ? lib.fetchFromGitHub,
   cmake,
   nemea-framework,
-  fetchPypi,
   python3,
   pkg-config,
   ncurses,
@@ -12,21 +11,13 @@
   cacert,
   fuse3,
   boost,
-  libmaxminddb
+  libmaxminddb,
+  pytrap,
+  pycommon
 }:
 
 let
-  nemea-pytrap = python3.pkgs.buildPythonPackage rec {
-    pname = "nemea-pytrap";
-    version = "0.17.0";
-    src = fetchPypi {
-      inherit pname version;
-      sha256 = "sha256-Bpst1oU9ZbODgpF0oayjfT20wiheoG3HiLRWYyaqPa8=";
-    };
-    propagatedBuildInputs = with python3.pkgs; [ setuptools nemea-framework ];
-  };
-
-  pythonEnv = python3.withPackages (ps: [ nemea-pytrap ]);
+  pythonEnv = python3.withPackages (ps: [ pytrap pycommon ]);
 in
 stdenv.mkDerivation rec {
   pname = "Nemea Modules NG";
