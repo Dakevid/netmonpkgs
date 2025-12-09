@@ -18,13 +18,30 @@
         "type": "github"
       }
     },
+    "ipfixcol2-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1765282030,
+        "narHash": "sha256-qFF03bkEl0fsiIYIlf19ytwCYelVujSXyqXbdSz6bEg=",
+        "ref": "replace-ODID",
+        "rev": "e9def8f2a2c9039cf6a12236b50aed47ae7599e5",
+        "revCount": 724,
+        "type": "git",
+        "url": "ssh://git@gitlab.liberouter.org/monitoring/ipfixcol2.git"
+      },
+      "original": {
+        "ref": "replace-ODID",
+        "type": "git",
+        "url": "ssh://git@gitlab.liberouter.org/monitoring/ipfixcol2.git"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1761016216,
-        "narHash": "sha256-G/iC4t/9j/52i/nm+0/4ybBmAF4hzR8CNHC75qEhjHo=",
+        "lastModified": 1764939437,
+        "narHash": "sha256-4TLFHUwXraw9Df5mXC/vCrJgb50CRr3CzUzF0Mn3CII=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "481cf557888e05d3128a76f14c76397b7d7cc869",
+        "rev": "00d2457e2f608b4be6fe8b470b0a36816324b0ae",
         "type": "github"
       },
       "original": {
@@ -37,6 +54,7 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
+        "ipfixcol2-src": "ipfixcol2-src",
         "nixpkgs": "nixpkgs"
       }
     },

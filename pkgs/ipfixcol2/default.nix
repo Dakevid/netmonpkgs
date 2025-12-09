@@ -1,7 +1,6 @@
 {
   stdenv,
   lib,
-  fetchFromGitHub ? lib.fetchFromGitHub,
   cmake,
   libfds,
   docutils,
@@ -11,22 +10,17 @@
   lz4,
   nemea-framework,
   git,
-  cacert
+  cacert,
+  src
 }:
 
 stdenv.mkDerivation rec {
   pname = "ipfixcol2";
-  version = "2.7.1";
+  version = "2.7.1-unstable";
 
-  src = fetchFromGitHub {
-    owner = "CESNET";
-    repo = "ipfixcol2";
-    #tag = "v${version}";
-    rev = "80c389b43e12cfaffa2ea622b829a6371b7d054c";
-    hash = "sha256-xjYuAMAME6Bhb4h3iFHf1RkTmsUcjhoJyfgorktDDc0=";
-  };
+  inherit src;
 
-  nativeBuildInputs = [ cmake git cacert ];
+  nativeBuildInputs = [ cmake git cacert];
   buildInputs = [ libfds docutils libxml2 rdkafka zlib lz4 nemea-framework ];
 
   postInstall = ''

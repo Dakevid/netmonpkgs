@@ -7,5 +7,5 @@
 
 pkgs.symlinkJoin {
   name = "nemea-modules-meta";
-  paths = [ nemea-modules nemea-modules-ng decrypto ];
+  paths = [ nemea-modules nemea-modules-ng ];
 }

@@ -4,9 +4,13 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     flake-utils.url = "github:numtide/flake-utils";
+    ipfixcol2-src = {
+      url = "git+ssh://git@gitlab.liberouter.org/monitoring/ipfixcol2.git?ref=replace-ODID";
+      flake = false;
+    };
   };
 
-  outputs = { nixpkgs, flake-utils, ... }:
+  outputs = { nixpkgs, flake-utils, ipfixcol2-src, ... }:
     let
       mkPkgs = callPackage:
         let
@@ -36,6 +40,7 @@
               pynspect = pkg.pynspect;
             };
             ipfixcol2 = callPackage ./pkgs/ipfixcol2/default.nix {
+              src = ipfixcol2-src;
               libfds = pkg.libfds;
               nemea-framework = pkg.nemea-framework;
             };
