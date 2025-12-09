@@ -5,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     flake-utils.url = "github:numtide/flake-utils";
     ipfixcol2-src = {
-      url = "git+ssh://git@gitlab.liberouter.org/monitoring/ipfixcol2.git?ref=replace-ODID";
+      url = "git+ssh://git@gitlab.liberouter.org/monitoring/ipfixcol2.git?ref=master";
       flake = false;
     };
   };

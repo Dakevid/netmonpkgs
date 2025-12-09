@@ -21,16 +21,16 @@
     "ipfixcol2-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1765282030,
-        "narHash": "sha256-qFF03bkEl0fsiIYIlf19ytwCYelVujSXyqXbdSz6bEg=",
-        "ref": "replace-ODID",
-        "rev": "e9def8f2a2c9039cf6a12236b50aed47ae7599e5",
-        "revCount": 724,
+        "lastModified": 1750337499,
+        "narHash": "sha256-jypSEjgTaqj4CyI5A2npFXIfTZMLBY/pnkQYwSG9/hc=",
+        "ref": "master",
+        "rev": "28244958d880fa9cf43037df08ea9336881c1b98",
+        "revCount": 723,
         "type": "git",
         "url": "ssh://git@gitlab.liberouter.org/monitoring/ipfixcol2.git"
       },
       "original": {
-        "ref": "replace-ODID",
+        "ref": "master",
         "type": "git",
         "url": "ssh://git@gitlab.liberouter.org/monitoring/ipfixcol2.git"
       }
